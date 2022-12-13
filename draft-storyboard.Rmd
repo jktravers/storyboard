@@ -1,0 +1,150 @@
+---
+title: "Jule's Storyboard"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: "spacelab"
+    storyboard: true
+
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+# create www folder
+fs::dir_create("www/")
+# options for chunks
+knitr::opts_chunk$set(
+  cache = FALSE,
+  echo = TRUE,
+  collapse = FALSE,
+  eval = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  dev = "ragg_png",
+  out.width = '85%',
+  fig.path = "www/",
+  dpi = 320,
+  fig.align = "center",
+  fig.width = 7,
+  fig.height = 5.5,
+  fig.retina = 2
+  )
+# tibble printing
+options(
+  pillar.print_max = 10, 
+  pillar.print_min = 10)
+```
+
+
+### Background {data-commentary-width=350}
+
+The Monkepox: Daily Confirmed Cases datasets comes from the ['Monkeypox Data Explorer' from ourworldindata](https://ourworldindata.org/monkeypox). You can view these data by clicking on the following link: https://ourworldindata.org/monkeypox
+
+
+
+*** 
+
+ The Monkeypox Data Explorer is updated every hour and allows you to explore the data produced by the World Health Organization. Created by Edouard Mathieu, Fiona Spooner, Saloni Dattani, Hannah Ritchie and Max Roser.
+
+### Data {data-commentary-width=400}
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(vroom)
+mp_raw <- vroom::vroom(file = "https://raw.githubusercontent.com/owid/monkeypox/main/owid-monkeypox-data.csv", 
+                       delim = ",") 
+
+```
+
+```{r}
+glimpse(mp_raw)
+```
+
+
+*** 
+
+
+### New Cases {data-commentary-width=400}
+
+
+
+```{r new_cases, echo=FALSE}
+ggplot(data = mp_raw, 
+       mapping = aes(x = date, y = new_cases, group=location)) +
+  geom_line() + 
+  ggplot2::theme_linedraw()+
+  labs(title = "MonkeyPox Cases" , subtitle = "From ourworldindata", 
+       x="Date", y="New Cases", 
+       caption="source: https://ourworldindata.org/monkeypox" )
+```
+
+*** 
+
+Date versus new cases
+
+
+```{r new_cases_hide, eval=FALSE}
+ggplot(data = mp_raw,
+       mapping = aes(x = date,
+                     y = new_cases,
+                     group = location)) +
+  geom_line()
+```
+
+### New Cases Smoothed {data-commentary-width=400}
+
+
+
+```{r new_cases_smoothed, echo=FALSE}
+ggplot(data = mp_raw, 
+       mapping = aes(x = date, y = new_cases_smoothed, group=location)) +
+  geom_line()+
+    ggplot2::theme_linedraw()+
+  labs(title = "MonkeyPox Cases" , subtitle = "From ourworldindata", 
+       x="Date", y="New Cases (Smoothed)", 
+       caption="source: https://ourworldindata.org/monkeypox" )
+```
+
+*** 
+
+Date versus new cases smoothed
+
+```{r new_cases_smoothed_hide, eval=FALSE}
+ggplot(data = mp_raw,
+       mapping = aes(x = date,
+                     y = new_cases_smoothed,
+                     group = location)) +
+  geom_line()
+```
+
+### New Cases per Million {data-commentary-width=400}
+
+
+
+```{r new_cases_per_million, echo=FALSE}
+ggplot(data = mp_raw, 
+       mapping = aes(x = date, y = new_cases_per_million, group=location)) +
+  geom_line()+
+    ggplot2::theme_linedraw()+
+  labs(title = "MonkeyPox Cases" , subtitle = "From ourworldindata", 
+       x="Date", y="New Cases per Million (smoothed)", 
+       caption="source: https://ourworldindata.org/monkeypox" )
+```
+
+*** 
+
+Date versus new cases per million
+
+
+```{r new_cases_per_million_hide, eval=FALSE}
+ggplot(
+  data = mp_raw,
+  mapping = aes(x = date,
+                y = new_cases_per_million,
+                group = location)) +
+  geom_line()
+```
+
+
+
+
+
+
